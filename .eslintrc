@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "semi: 0
+  },
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "plugins": [
+    "babel",
+    "react"
+  ]
+}
