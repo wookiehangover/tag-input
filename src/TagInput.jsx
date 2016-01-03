@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import classNames from 'classnames'
 import fuzzy from 'fuzzy'
 
 import unique from 'lodash/array/unique'

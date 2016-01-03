@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import classnames from 'classnames'
 
 const TagMenu = React.createClass({
   propTypes: {
@@ -21,26 +20,23 @@ const TagMenu = React.createClass({
 
   render() {
     return (
-      <ul>
+      <datalist>
         {this.props.filteredTags.map((value, index) => {
-          const focusedClass = classnames({
-            'tag-item__focused': (value === this.props.active)
-          })
-
           const props = {
             key: index,
-            className: focusedClass,
+            className: (value === this.props.active) ? 'tag-item__focused': '',
             onMouseOver: this.updateFocusedOption,
-            onClick: this.onClick.bind(null, value)
+            onClick: this.onClick.bind(null, value),
+            value
           }
 
           return (
-            <li {...props}>
-              <a href="#">{value}</a>
-            </li>
+            <option {...props}>
+              {value}
+            </option>
           )
         })}
-      </ul>
+      </datalist>
     )
   }
 })
