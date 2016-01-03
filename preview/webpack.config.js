@@ -3,26 +3,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
+const loaders = require('../build/loaders').dev
 
 const previewDir = path.resolve(__dirname)
-
-const loaders = [
-  {
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    loader: 'babel',
-    query: {
-      presets: [
-        'react', 'es2015'
-      ]
-    }
-  },
-  {
-    test: /\.css$/,
-    exclude: /node_modules/,
-    loaders: ['style', 'css', 'postcss']
-  }
-]
 
 module.exports = {
   devtool: 'cheap-module-source-map',
