@@ -3,9 +3,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
-const loaders = require('../build/loaders').dev
-
-const previewDir = path.resolve(__dirname)
+const loaders = require('./loaders').dev
+const previewDir = path.resolve(__dirname + '/../example')
 
 module.exports = {
   devtool: 'cheap-module-source-map',
