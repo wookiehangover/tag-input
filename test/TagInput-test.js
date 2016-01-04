@@ -9,6 +9,7 @@ import TestUtils from 'react-addons-test-utils'
 import TagInput from '../src/TagInput'
 import KeyHandler from '../src/KeyHandler'
 import sinon from 'sinon/pkg/sinon'
+import pluck from 'lodash/collection/pluck'
 
 const KEY_MAP = {
   backspace: 8,
@@ -25,15 +26,15 @@ describe('TagInput', function () {
   beforeEach(function () {
     this.changeSpy = sinon.spy()
 
-    const props = {
+    this.props = {
       tags: ['a', 'aa', 'aaa', 'b', 'c'],
       onChange: this.changeSpy
     }
 
-    this.component = TestUtils.renderIntoDocument(<TagInput {...props} />)
+    this.component = TestUtils.renderIntoDocument(<TagInput {...this.props} />)
   })
 
-  describe('componentDidMount renders', function () {
+  describe('component renders as expected', function () {
     it('the component', function () {
       const tagsInput = TestUtils.findRenderedComponentWithType(this.component, TagInput)
       assert.isDefined(tagsInput)
@@ -56,30 +57,22 @@ describe('TagInput', function () {
 
   describe('filtered tags', function () {
     beforeEach(function () {
-      this.component.setState({ filteredTags: ['a', 'aa']})
+      this.component.setState({ filteredTags: [{ text: 'a' }, { text: 'aa' }]})
     })
 
     it('renders a tags menu', function () {
-      const tagMenu = TestUtils.scryRenderedDOMComponentsWithTag(this.component, 'option')
+      const tagMenu = TestUtils.scryRenderedDOMComponentsWithTag(this.component, 'li')
       assert.lengthOf(tagMenu, 2)
     })
 
     describe('ListItems', function () {
-
       it('renders a List item for each result', function () {
         this.component.setState({
-          filteredTags: ['a' , 'aa', 'aaa', 'aaaa']
+          filteredTags: [{ text: 'a' }, { text: 'aa' }, { text: 'aaa' }, { text: 'aaaa' }]
         })
 
-        const listItems = TestUtils.scryRenderedDOMComponentsWithTag(this.component, 'option')
+        const listItems = TestUtils.scryRenderedDOMComponentsWithTag(this.component, 'li')
         assert.lengthOf(listItems, 4)
-      })
-
-      it('onMouseOver of an item sets its class to focused', function () {
-        const listItems = TestUtils.scryRenderedDOMComponentsWithTag(this.component, 'option')
-        const chosenListItem = listItems[0]
-        TestUtils.Simulate.mouseOver(findDOMNode(chosenListItem))
-        assert.isTrue(findDOMNode(chosenListItem).classList.contains('tag-item__focused'))
       })
 
       it('renders a tag label for each prop value', function () {
@@ -150,9 +143,9 @@ describe('TagInput', function () {
 
     describe('with a value', function () {
       it('sets the fuzzy filtered results in filteredTags state', function () {
-        const syntheticEvent = {target: {value: 'a'}}
+        const syntheticEvent = { target: { value: 'a' } }
         this.component.filterTags(syntheticEvent)
-        const filteredTags = this.component.state.filteredTags
+        const filteredTags = pluck(this.component.state.filteredTags, 'text')
         assert.sameMembers(filteredTags, ['a', 'aa', 'aaa'])
       })
     })
@@ -230,7 +223,7 @@ describe('TagInput', function () {
     describe('nav keys', function () {
       beforeEach(function () {
         this.component.setState({
-          filteredTags: ['a', 'b', 'c'],
+          filteredTags: [{ text: 'a'}, { text: 'b' }, { text: 'c' }],
           focusedOption: 'b'
         })
       })

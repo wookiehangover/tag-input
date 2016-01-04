@@ -53,19 +53,23 @@
   border: none;
 }
 
-:local(.TagInput) datalist {
+:local(.TagInput) ul {
+  list-style: none;
   display: block;
   box-shadow: 0 1px 1px lightgrey;
   background: white;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   position: absolute;
   left: -1px;
-  top: 100%;
-  max-height: 22rem;
+  top: calc(100% + 1px);
   width: calc(100% + 2px);
+  max-height: 22rem;
+  margin: 0;
+  padding: 0;
 }
 
-:local(.TagInput) datalist > option {
+:local(.TagInput) ul > li {
   display: block;
   color: #444;
   border: 1px solid lightgrey;
@@ -73,11 +77,7 @@
   padding: 1rem;
 }
 
-:local(.TagInput) datalist > option:first-of-type {
-  border-top: 1px solid lightgrey;
-}
-
-:local(.TagInput) datalist > option.tag-item__focused,
-:local(.TagInput) datalist > option:hover {
+:local(.TagInput) ul > li.tag-item__focused,
+:local(.TagInput) ul > li:hover {
   background: lightcyan;
 }

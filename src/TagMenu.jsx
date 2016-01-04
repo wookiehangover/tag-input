@@ -1,4 +1,45 @@
 import React, { PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
+
+const TagMenuItemText = function({ chunk }) {
+  const isWrapped = chunk.match(/<(.)>/)
+
+  if (isWrapped && isWrapped.length === 2) {
+    return <b>{isWrapped[1]}</b>
+  } else {
+    return <span>{chunk}</span>
+  }
+}
+
+const TagMenuItem = React.createClass({
+  propTypes: {
+    active: React.PropTypes.bool.isRequired,
+    value: React.PropTypes.object.isRequired,
+    onClick: React.PropTypes.func.isRequired,
+    className: React.PropTypes.string
+  },
+
+  componentDidUpdate() {
+    if (this.props.active) {
+      const node = findDOMNode(this)
+      node.scrollIntoViewIfNeeded()
+    }
+  },
+
+  render() {
+    const { value, active, onClick } = this.props
+    const className = active ? 'tag-item__focused': ''
+    const valueText = value.parts
+      ? value.parts.map((chunk, i) => <TagMenuItemText chunk={chunk} key={i} />)
+      : value.text
+
+    return (
+      <li className={className} onClick={onClick}>
+        {valueText}
+      </li>
+    )
+  }
+})
 
 const TagMenu = React.createClass({
   propTypes: {
@@ -12,31 +53,26 @@ const TagMenu = React.createClass({
     this.props.addTag(value)
   },
 
-  updateFocusedOption(ev) {
+  updateFocusedOption(value, ev) {
     this.props.update({
-      focusedOption: ev.currentTarget.text
+      focusedOption: value
     })
   },
 
   render() {
     return (
-      <datalist>
+      <ul>
         {this.props.filteredTags.map((value, index) => {
           const props = {
             key: index,
-            className: (value === this.props.active) ? 'tag-item__focused': '',
-            onMouseOver: this.updateFocusedOption,
-            onClick: this.onClick.bind(null, value),
-            value
+            active: this.props.active === value.text,
+            onClick: this.onClick.bind(null, value.text),
+            value: value
           }
 
-          return (
-            <option {...props}>
-              {value}
-            </option>
-          )
+          return <TagMenuItem {...props} />
         })}
-      </datalist>
+      </ul>
     )
   }
 })

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
+import pluck from 'lodash/collection/pluck'
 
 const KeyHandler = React.createClass({
   propTypes: {
@@ -22,7 +23,7 @@ const KeyHandler = React.createClass({
     let focusedIndex = -1
 
     for (var i = 0; i < tags.length; i++) {
-      if (this.props.active === tags[i]) {
+      if (this.props.active === tags[i].text) {
         focusedIndex = i
         break
       }
@@ -32,7 +33,7 @@ const KeyHandler = React.createClass({
   },
 
   focusOption(direction) {
-    let tags = this.props.filteredTags
+    let tags = pluck(this.props.filteredTags, 'text')
     let tagCount = tags.length
 
     if (!tagCount) {
@@ -125,8 +126,7 @@ const KeyHandler = React.createClass({
   render() {
     return React.cloneElement(
       React.Children.only(this.props.children), {
-        onKeyDown: this.onKeyDown,
-        onKeyUp: this.onKeyUp
+        onKeyDown: this.onKeyDown
       }
     )
   }

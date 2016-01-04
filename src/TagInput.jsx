@@ -3,8 +3,8 @@ import { findDOMNode } from 'react-dom'
 import fuzzy from 'fuzzy'
 
 import unique from 'lodash/array/unique'
+import compact from 'lodash/array/compact'
 import without from 'lodash/array/without'
-import pluck from 'lodash/collection/pluck'
 import last from 'lodash/array/last'
 import pick from 'lodash/object/pick'
 
@@ -99,24 +99,39 @@ const TagsInput = React.createClass({
   },
 
   removeTag(value = last(this.props.value)) {
-    const tags = this.props.value || []
+    const tags = this.props.value || this.props.defaultValue || []
     if (this.props.onChange) {
       this.props.onChange(without(tags, value))
     }
   },
 
   filterTags(ev) {
-    const value = ev.target.value
-    if (value === '') {
+    const inputValue = ev.target.value
+    const currentValue = this.props.value || this.props.defaultValue || []
+    if (inputValue === '') {
       this.setState({ filteredTags: [] })
       return
     }
 
-    const filteredTags = without(
-      pluck(
-        fuzzy.filter(value, this.props.tags), 'string'
-      ),
-      this.props.value
+    // Wrap character mappings for hightlighting: <a>liceblue
+    const results = fuzzy.filter(
+      inputValue,
+      this.props.tags,
+      { pre: '<', post: '>' }
+    )
+
+    // Remove any currently matched tags and split the highlighted string into
+    // something consumable
+    const filteredTags = compact(
+      results.map(match => {
+        if (currentValue.indexOf(match.original) > -1) {
+          return null
+        }
+        return {
+          text: match.original,
+          parts: compact( match.string.split(/(<.>)/) )
+        }
+      })
     )
 
     this.setState({ filteredTags })
@@ -131,6 +146,7 @@ const TagsInput = React.createClass({
   },
 
   render() {
+    const tags = this.props.value || this.props.defaultValue || []
     const childProps = {
       addTag: this.addTag,
       removeTag: this.removeTag,
@@ -138,8 +154,6 @@ const TagsInput = React.createClass({
       filteredTags: this.state.filteredTags,
       update: (state) => this.setState(state)
     }
-
-    const tags = this.props.value || this.props.defaultValue || []
 
     return (
       <div className="tag-input" {...pick(this.props, ['className'])}>
