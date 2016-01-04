@@ -52,31 +52,32 @@
   margin: 0;
 }
 
-:local(.TagInput) ul {
-  list-style: none;
+:local(.TagInput) menu {
   display: block;
-  box-shadow: 0 1px 1px lightgrey;
   background: white;
-  overflow: scroll;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
   position: absolute;
   left: -1px;
-  top: calc(100% + 1px);
+  top: 100%;
   width: calc(100% + 2px);
   max-height: 22rem;
   margin: 0;
   padding: 0;
 }
 
-:local(.TagInput) ul > li {
+:local(.TagInput) menu.-isOpen {
+  border: 1px solid lightgrey;
+}
+
+:local(.TagInput) menu > li {
   display: block;
   color: #444;
-  border: 1px solid lightgrey;
-  border-top: none;
+  border-bottom: 1px solid lightgrey;
   padding: 1rem;
 }
 
-:local(.TagInput) ul > li.tag-item__focused,
-:local(.TagInput) ul > li:hover {
+:local(.TagInput) menu > li.tag-item__focused,
+:local(.TagInput) menu > li:hover {
   background: lightcyan;
 }

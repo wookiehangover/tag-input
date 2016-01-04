@@ -44,6 +44,7 @@ const TagMenuItem = React.createClass({
 const TagMenu = React.createClass({
   propTypes: {
     active: PropTypes.string,
+    id: React.PropTypes.string.isRequired,
     addTag: PropTypes.func.isRequired,
     filteredTags: PropTypes.array.isRequired,
     update: PropTypes.func.isRequired
@@ -60,8 +61,9 @@ const TagMenu = React.createClass({
   },
 
   render() {
+    const className = this.props.filteredTags.length > 0 ? '-isOpen': ''
     return (
-      <ul>
+      <menu className={className} type="popup" id={this.props.id}>
         {this.props.filteredTags.map((value, index) => {
           const props = {
             key: index,
@@ -72,7 +74,7 @@ const TagMenu = React.createClass({
 
           return <TagMenuItem {...props} />
         })}
-      </ul>
+      </menu>
     )
   }
 })

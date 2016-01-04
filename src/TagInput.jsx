@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom'
 import fuzzy from 'fuzzy'
 
 import unique from 'lodash/array/unique'
+import uniqueId from 'lodash/utility/uniqueId'
 import compact from 'lodash/array/compact'
 import without from 'lodash/array/without'
 import last from 'lodash/array/last'
@@ -15,17 +16,18 @@ import Tag from './Tag'
 const TagsInput = React.createClass({
   propTypes: {
     value: React.PropTypes.array,
-    defaultValue: React.PropTypes.array,
+    name: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     tags: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func.isRequired,
-    allowOriginalValues: React.PropTypes.bool
+    allowOriginalValues: React.PropTypes.bool,
   },
 
   getDefaultProps() {
     return {
       placeholder: 'Add Some Tags...',
-      allowOriginalValues: true
+      allowOriginalValues: true,
+      name: uniqueId('tag-input')
     }
   },
 
@@ -109,9 +111,9 @@ const TagsInput = React.createClass({
           <Tag value={value} remove={this.removeTag} key={i} />
         )}
         <KeyHandler {...childProps}>
-          <input ref="input" placeholder={this.props.placeholder} onChange={this.filterTags} onFocus={this.handleInputFocus} />
+          <input ref="input" placeholder={this.props.placeholder} onChange={this.filterTags} contextmenu={`${this.props.name}-menu`}/>
         </KeyHandler>
-        <TagMenu {...childProps}/>
+        <TagMenu {...childProps} id={`${this.props.name}-menu`}/>
       </div>
     )
   }
