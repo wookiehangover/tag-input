@@ -22,7 +22,11 @@ const TagMenuItem = React.createClass({
   componentDidUpdate() {
     if (this.props.active) {
       const node = findDOMNode(this)
-      node.scrollIntoViewIfNeeded()
+      if (node.scrollIntoViewIfNeeded) {
+        node.scrollIntoViewIfNeeded(false)
+      } else if (node.scrollIntoView) {
+        node.scrollIntoView(true)
+      }
     }
   },
 
