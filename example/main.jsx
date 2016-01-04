@@ -29,8 +29,8 @@ const App = React.createClass({
         />
         <div className="color-grid">
           {this.state.tags.map(tag =>
-            <div className="color-block" style={{ background: tag }} key={tag}>
-              <a href={`#${tag}`} name={tag} alt={tag} />
+            <div className="color-block" style={{ backgroundColor: tag }} key={tag}>
+              <a href={`#${tag}`} name={tag} title={tag} />
             </div>
           )}
         </div>

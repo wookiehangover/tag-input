@@ -8,6 +8,12 @@ main {
   margin: auto;
 }
 
+@media (max-width: 35rem) {
+  main {
+    margin: 1rem;
+  }
+}
+
 .color-grid {
   display: flex;
   flex-wrap: wrap;
