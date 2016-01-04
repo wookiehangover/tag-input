@@ -14,16 +14,18 @@ import Tag from './Tag'
 
 const TagsInput = React.createClass({
   propTypes: {
-    tags: React.PropTypes.array.isRequired,
-    onChange: React.PropTypes.func.isRequired,
     value: React.PropTypes.array,
     defaultValue: React.PropTypes.array,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    tags: React.PropTypes.array.isRequired,
+    onChange: React.PropTypes.func.isRequired,
+    allowOriginalValues: React.PropTypes.bool
   },
 
   getDefaultProps() {
     return {
-      placeholder: 'Add Some Tags...'
+      placeholder: 'Add Some Tags...',
+      allowOriginalValues: true
     }
   },
 
@@ -79,10 +81,18 @@ const TagsInput = React.createClass({
   },
 
   addTag(value) {
-    const tags = (this.props.value || []).concat([ value ])
-    const node = findDOMNode(this.refs.input)
+    if (this.props.allowOriginalValues === false
+        && this.props.tags.indexOf(value) < 0) {
+      return
+    }
+
+    const tags = (this.props.value || this.props.defaultValue || []).concat([ value ])
     this.setState({ filteredTags: [] })
+
+    // Reset the input value
+    const node = findDOMNode(this.refs.input)
     node.value = ''
+
     if (this.props.onChange) {
       this.props.onChange(unique(tags))
     }

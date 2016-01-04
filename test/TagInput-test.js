@@ -113,13 +113,32 @@ describe('TagInput', function () {
       const inputValue = findDOMNode(this.component.refs.input).value
       assert.equal(inputValue, '')
     })
+
+    it('allows original values', function() {
+      this.changeSpy.reset()
+      this.component.addTag('z')
+      assert.isTrue(this.changeSpy.calledWith(['z']))
+    })
+
+    it('prevents original values when allowOriginalValues is false', function() {
+      const props = {
+        tags: ['a'],
+        onChange: sinon.stub(),
+        allowOriginalValues: false
+      }
+      const component = TestUtils.renderIntoDocument(<TagInput {...props}/>)
+      component.addTag('z')
+      assert.isFalse(props.onChange.called)
+      component.addTag('a')
+      assert.isTrue(props.onChange.calledWith(['a']))
+    })
   })
 
   describe('#filterTags', function () {
     describe('without a value', function () {
       it('resets filteredTags', function () {
         this.component.setState({
-          filteredTags: ['a','b','c']
+          filteredTags: [{ text: 'a' }, { text: 'b' }, { text: 'c' }]
         })
 
         const syntheticEvent = {target: {value: ''}}
